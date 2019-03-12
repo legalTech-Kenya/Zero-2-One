@@ -5,10 +5,10 @@ import json
 app = Flask(__name__)
 
 pusher = Pusher(
-      app_id='731843',
-      key='27d24dd4fb556b3ccd1a',
-      secret='b20b5fdbb40c345897cf',
-      cluster='ap2',
+      app_id='ID',
+      key='KEY',
+      secret='SECRETKEY',
+      cluster='CLUSTER',
       ssl=True
     )
 
