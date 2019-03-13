@@ -1,60 +1,34 @@
 <!-- ./templates/index.html -->
 <html>
 <head>
-  <!-- link to the ToDo MVC index.css file -->
+  <!-- link to the Todo MVC index.css file -->
+  <link rel="good-icon" href="good-answer-512x512.png" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link rel="stylesheet" href="/static/todomvc-app-css/index.css">
-  <title>Tasks</title>
+  <title>Task</title>
 </head>
 
 <body>
   <section class="todoapp">
     <header class="header">
       <h1>Zero-2-One</h1>
-      <input class="new-todo" placeholder="Jot down your stuff here."
-      autofocus="" onkeypress="addItem(event)">
+      <input class="new-todo" placeholder="What needs to be done?"
+        autofocus="" onkeypress="addItem(event)">
     </header>
 
     <section class="main">
       <ul class="todo-list"></ul>
     </section>
+    <footer class="footer">Real time sticky notes</footer>
 
-    <footer class="footer"></footer>
   </section>
+</body>
+</html>
 
-  <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+<!-- ./templates/index.html -->
+<html>
+  <!-- // ... -->
   <script>
-    // Enable pusher logging for debugging - don't include this in production
-    Pusher.logToConsole = true;
-
-    // configure pusher
-    const pusher = new Pusher('KEY', {
-      cluster: 'CLUSTER',
-      encrypted: true
-    });
-
-    // subscribe to `todo` public channel, on which we'd be broadcasting events
-    const channel = pusher.subscribe('todo');
-
-    // listen for item-added events, and update todo list once event triggered
-    channel.bind('item-added', data => {
-      appendToList(data);
-    });
-
-    // listen for item-removed events
-    channel.bind('item-removed', data => {
-      let item = document.querySelector(`#${data.id}`);
-      item.parentNode.removeChild(item);
-    });
-
-    // listen for item-updated events
-    channel.bind('item-updated', data => {
-      let elem = document.querySelector(`#${data.id} .toggle`);
-      let item = document.querySelector(`#${data.id}`);
-      item.classList.toggle("completed");
-      elem.dataset.completed = data.completed;
-      elem.checked = data.completed == 1;
-    });
-
     // function that makes API call to add an item
     function addItem(e) {
       // if enter key is pressed on the form input, add new item
@@ -85,7 +59,7 @@
     // incomplete states
     function toggleComplete(elem) {
       let id = elem.dataset.id,
-      completed = (elem.dataset.completed == "1" ? "0" : "1");
+          completed = (elem.dataset.completed == "1" ? "0" : "1");
       fetch(`/update-todo/${id}`, {
         method: 'post',
         body: JSON.stringify({ completed })
@@ -95,24 +69,61 @@
     // helper function to append new ToDo item to current ToDo list
     function appendToList(data) {
       let html = `
-      <li id="${data.id}">
-        <div class="view">
-          <input class="toggle" type="checkbox" onclick="toggleComplete(this)"
-          data-completed="${data.completed}" data-id="${data.id}">
-          <label>${data.value}</label>
-          <button class="destroy" onclick="removeItem('${data.id}')"></button>
-        </div>
-      </li>`;
+        <li id="${data.id}">
+          <div class="view">
+            <input class="toggle" type="checkbox" onclick="toggleComplete(this)"
+              data-completed="${data.completed}" data-id="${data.id}">
+            <label>${data.value}</label>
+            <button class="destroy" onclick="removeItem('${data.id}')"></button>
+          </div>
+        </li>`;
       let list = document.querySelector(".todo-list")
       list.innerHTML += html;
-    };
+   };
   </script>
 </body>
 </html>
-<footer class="sticky-footer">
-  <div class="container">
-    <div class="text-center">
-      <small>Copyright © wakili ai 2018-2019</small>
-    </div>
-  </div>
-</footer>
+
+<!-- ./templates/index.html -->
+<html>
+  <!-- .// -->
+  <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+
+  <script>
+    // Enable pusher logging for debugging - don't include this in production
+    Pusher.logToConsole = true;
+
+    // configure pusher
+    const pusher = new Pusher('27d24dd4fb556b3ccd1a', {
+      cluster: 'ap2', // gotten from Pusher app dashboard
+      encrypted: true // optional
+    });
+
+    // subscribe to `todo` public channel, on which we'd be broadcasting events
+    const channel = pusher.subscribe('todo');
+
+    // listen for item-added events, and update todo list once event triggered
+    channel.bind('item-added', data => {
+      appendToList(data);
+    });
+
+    // listen for item-removed events
+    channel.bind('item-removed', data => {
+      let item = document.querySelector(`#${data.id}`);
+      item.parentNode.removeChild(item);
+    });
+
+    // listen for item-updated events
+    channel.bind('item-updated', data => {
+      let elem = document.querySelector(`#${data.id} .toggle`);
+      let item = document.querySelector(`#${data.id}`);
+      item.classList.toggle("completed");
+      elem.dataset.completed = data.completed;
+      elem.checked = data.completed == 1;
+    });
+
+    // ...
+  </script>
+</body>
+</html>
+<footer>Copyright © wakili ai 2019 </footer>
