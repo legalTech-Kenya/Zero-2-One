@@ -1,4 +1,4 @@
-# Zero-2-One
+# Zero2One
 A Real Time To-do list app
 
 #Credits
